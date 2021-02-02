@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C0E7A5425C336A500AF1FF7 /* Player.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2C0E7A5225C336A500AF1FF7 /* Player.xcdatamodeld */; };
+		2C0E7A5825C5782400AF1FF7 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0E7A5725C5782400AF1FF7 /* CoreDataManager.swift */; };
+		2C0E7A5B25C58CCD00AF1FF7 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0E7A5A25C58CCD00AF1FF7 /* PlayerViewController.swift */; };
 		2C5A058E25C1D33600B7F6F6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A058D25C1D33600B7F6F6 /* AppDelegate.swift */; };
 		2C5A059725C1D33800B7F6F6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C5A059625C1D33800B7F6F6 /* Assets.xcassets */; };
 		2C5A05A325C1D35500B7F6F6 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A05A225C1D35500B7F6F6 /* MainViewController.swift */; };
@@ -14,6 +17,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2C0E7A5325C336A500AF1FF7 /* Player.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Player.xcdatamodel; sourceTree = "<group>"; };
+		2C0E7A5725C5782400AF1FF7 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
+		2C0E7A5A25C58CCD00AF1FF7 /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
 		2C5A058A25C1D33600B7F6F6 /* SportManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SportManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C5A058D25C1D33600B7F6F6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2C5A059625C1D33800B7F6F6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -33,6 +39,32 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2C0E7A5625C5780F00AF1FF7 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				2C0E7A5725C5782400AF1FF7 /* CoreDataManager.swift */,
+				2C0E7A5225C336A500AF1FF7 /* Player.xcdatamodeld */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		2C0E7A5D25C88E0B00AF1FF7 /* Player View Controller */ = {
+			isa = PBXGroup;
+			children = (
+				2C0E7A5A25C58CCD00AF1FF7 /* PlayerViewController.swift */,
+			);
+			path = "Player View Controller";
+			sourceTree = "<group>";
+		};
+		2C0E7A5F25C88E1C00AF1FF7 /* Table View Controller */ = {
+			isa = PBXGroup;
+			children = (
+				2C5A05A225C1D35500B7F6F6 /* MainViewController.swift */,
+				2C5A05AB25C1D80B00B7F6F6 /* PlayerCell.swift */,
+			);
+			path = "Table View Controller";
+			sourceTree = "<group>";
+		};
 		2C5A058125C1D33600B7F6F6 = {
 			isa = PBXGroup;
 			children = (
@@ -53,8 +85,9 @@
 			isa = PBXGroup;
 			children = (
 				2C5A058D25C1D33600B7F6F6 /* AppDelegate.swift */,
-				2C5A05A225C1D35500B7F6F6 /* MainViewController.swift */,
-				2C5A05AB25C1D80B00B7F6F6 /* PlayerCell.swift */,
+				2C0E7A5F25C88E1C00AF1FF7 /* Table View Controller */,
+				2C0E7A5D25C88E0B00AF1FF7 /* Player View Controller */,
+				2C0E7A5625C5780F00AF1FF7 /* Models */,
 				2C5A059625C1D33800B7F6F6 /* Assets.xcassets */,
 				2C5A059B25C1D33800B7F6F6 /* Info.plist */,
 			);
@@ -129,9 +162,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C0E7A5425C336A500AF1FF7 /* Player.xcdatamodeld in Sources */,
 				2C5A05AC25C1D80C00B7F6F6 /* PlayerCell.swift in Sources */,
 				2C5A058E25C1D33600B7F6F6 /* AppDelegate.swift in Sources */,
+				2C0E7A5825C5782400AF1FF7 /* CoreDataManager.swift in Sources */,
 				2C5A05A325C1D35500B7F6F6 /* MainViewController.swift in Sources */,
+				2C0E7A5B25C58CCD00AF1FF7 /* PlayerViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -314,6 +350,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		2C0E7A5225C336A500AF1FF7 /* Player.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				2C0E7A5325C336A500AF1FF7 /* Player.xcdatamodel */,
+			);
+			currentVersion = 2C0E7A5325C336A500AF1FF7 /* Player.xcdatamodel */;
+			path = Player.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 2C5A058225C1D33600B7F6F6 /* Project object */;
 }

@@ -9,8 +9,11 @@ import UIKit
 
 final class MainViewController: UIViewController {
     
+    // MARK: - Public Properties
+    var dataManager: CoreDataManager!
+    
     // MARK: - Private Properties
-    private let playerArray = [1, 2, 3]
+    private var playerArray = [Player]()
     
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: view.bounds, style: .plain)
@@ -27,9 +30,16 @@ final class MainViewController: UIViewController {
         setupUI()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        fetchData()
+        tableView.reloadData()
+    }
+    
     // MARK: - Private Methods
     private func setupUI() {
         view.addSubview(tableView)
+        title = "Players"
         
         let addPlayerBarButtonItem = UIBarButtonItem(image: .add, style: .plain, target: self, action: #selector(pressedAddPlayer))
         
@@ -37,7 +47,13 @@ final class MainViewController: UIViewController {
     }
     
     @objc private func pressedAddPlayer() {
-        print("Pressed add player")
+        let viewController = PlayerViewController()
+        viewController.dataManager = dataManager
+        navigationController?.pushViewController(viewController, animated: true)
+    }
+    
+    private func fetchData() {
+        playerArray = dataManager.fetchData(for: Player.self)
     }
     
 }
@@ -61,5 +77,23 @@ extension MainViewController: UITableViewDataSource {
 
 // MARK: - Table View Delegate
 extension MainViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        180
+    }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        
+        switch editingStyle {
+        case .delete:
+            dataManager.delete(object: playerArray[indexPath.row])
+            fetchData()
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        default:
+            break
+        }
+    }
 }
