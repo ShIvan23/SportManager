@@ -16,7 +16,6 @@ final class PlayerCell: UITableViewCell {
     private let numberLabel: UILabel = {
         let label = UILabel()
         label.backgroundColor = #colorLiteral(red: 0.2714112997, green: 0.6117960811, blue: 0.5859911442, alpha: 1)
-        label.text = "11"
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -25,7 +24,6 @@ final class PlayerCell: UITableViewCell {
     private let fullNameLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Full name"
         return label
     }()
     
@@ -93,28 +91,24 @@ final class PlayerCell: UITableViewCell {
     private let teamDescriptionLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Text"
         return label
     }()
     
     private let nationalityDescriptionLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Text"
         return label
     }()
     
     private let positionDescriptionLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Text"
         return label
     }()
     
     private let ageDescriptionLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Text"
         return label
     }()
     
@@ -148,7 +142,7 @@ final class PlayerCell: UITableViewCell {
         
         let inset: CGFloat = 10
         let imageSize: CGFloat = 125
-        let halfMainStackViewWidth = (frame.width - (inset * 3)) / 2
+        let halfMainStackViewWidth = (frame.width - (inset * 3)) / 2.5
         
         NSLayoutConstraint.activate([numberLabel.topAnchor.constraint(equalTo: topAnchor, constant: inset),
                                      numberLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: inset),

@@ -90,8 +90,12 @@ extension MainViewController: UITableViewDelegate {
         switch editingStyle {
         case .delete:
             dataManager.delete(object: playerArray[indexPath.row])
-            fetchData()
-            tableView.deleteRows(at: [indexPath], with: .fade)
+            tableView.performBatchUpdates {
+                fetchData()
+                tableView.deleteRows(at: [indexPath], with: .fade)
+                
+            } completion: { _ in }
+
         default:
             break
         }

@@ -95,6 +95,9 @@ final class PlayerViewController: UIViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Position:"
+        label.lineBreakMode = NSLineBreakMode.byCharWrapping
+        label.numberOfLines = 0
+//        label.sizeToFit()
         return label
     }()
     
@@ -151,6 +154,23 @@ final class PlayerViewController: UIViewController {
         
         setupLayout()
         setupImagePickerController()
+    }
+    
+    // MARK: - Override Methods
+    // Обработка клавиатуры и Picker View
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        
+        view.endEditing(true)
+        if !positionPickerView.isHidden {
+            positionPickerView.isHidden = true
+            showTeamAndPosition()
+        }
+        
+        if !teamPickerView.isHidden {
+            teamPickerView.isHidden = true
+            showTeamAndPosition()
+        }
     }
     
     // MARK: - Private Methods
@@ -279,14 +299,17 @@ final class PlayerViewController: UIViewController {
 extension PlayerViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if textField == nameTextField {
-            numberTextField.becomeFirstResponder()
-        } else if textField == numberTextField {
-            nationalityTextField.becomeFirstResponder()
-        } else if textField == nationalityTextField {
-            ageTextField.becomeFirstResponder()
-        }
         
+        switch textField {
+        case nameTextField:
+            numberTextField.becomeFirstResponder()
+        case numberTextField:
+            nationalityTextField.becomeFirstResponder()
+        case nationalityTextField:
+            ageTextField.becomeFirstResponder()
+        default:
+            view.endEditing(true)
+        }
         return true
     }
 }
