@@ -16,11 +16,24 @@ final class MainViewController: UIViewController {
     private var playerArray = [Player]()
     
     private lazy var tableView: UITableView = {
-        let tableView = UITableView(frame: view.bounds, style: .plain)
+        let tableView = UITableView()
+        tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(PlayerCell.self, forCellReuseIdentifier: PlayerCell.identifierCell)
+        tableView.register(HeaderView.self, forHeaderFooterViewReuseIdentifier: HeaderView.headerIdentifier)
         return tableView
+    }()
+    
+    private let playerStatusSegmentControl: UISegmentedControl = {
+        let segmentControl = UISegmentedControl()
+        segmentControl.translatesAutoresizingMaskIntoConstraints = false
+        segmentControl.insertSegment(withTitle: "All", at: 0, animated: true)
+        segmentControl.insertSegment(withTitle: "In Play", at: 1, animated: true)
+        segmentControl.insertSegment(withTitle: "Bench", at: 2, animated: true)
+        segmentControl.selectedSegmentTintColor = .systemBlue
+        segmentControl.selectedSegmentIndex = 0
+        return segmentControl
     }()
     
     // MARK: - Life Cycles Methods
@@ -28,6 +41,7 @@ final class MainViewController: UIViewController {
         super.viewDidLoad()
         
         setupUI()
+        setupLayout()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -38,18 +52,45 @@ final class MainViewController: UIViewController {
     
     // MARK: - Private Methods
     private func setupUI() {
-        view.addSubview(tableView)
         title = "Players"
+        view.backgroundColor = .systemBackground
         
-        let addPlayerBarButtonItem = UIBarButtonItem(image: .add, style: .plain, target: self, action: #selector(pressedAddPlayer))
+        let addPlayerBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(pressedAddPlayer))
+        let searchPlayerBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(pressedSearchPlayer))
         
         navigationItem.rightBarButtonItem = addPlayerBarButtonItem
+        navigationItem.leftBarButtonItem = searchPlayerBarButtonItem
+    }
+    
+    private func setupLayout() {
+        [tableView, playerStatusSegmentControl].forEach { (element) in
+            view.addSubview(element)
+        }
+        
+        let inset: CGFloat = 15
+        
+        NSLayoutConstraint.activate([playerStatusSegmentControl.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: inset),
+                                     playerStatusSegmentControl.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: inset),
+                                     playerStatusSegmentControl.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -inset),
+                                     playerStatusSegmentControl.heightAnchor.constraint(equalToConstant: 30),
+                                        
+                                        tableView.topAnchor.constraint(equalTo: playerStatusSegmentControl.bottomAnchor, constant: inset),
+                                     tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                                     tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                                     tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)])
     }
     
     @objc private func pressedAddPlayer() {
         let viewController = PlayerViewController()
         viewController.dataManager = dataManager
         navigationController?.pushViewController(viewController, animated: true)
+    }
+    
+    @objc private func pressedSearchPlayer() {
+        let searchViewController = SearchViewController()
+        searchViewController.modalTransitionStyle = .crossDissolve
+        searchViewController.modalPresentationStyle = .overCurrentContext
+        present(searchViewController, animated: true, completion: nil)
     }
     
     private func fetchData() {
@@ -72,6 +113,16 @@ extension MainViewController: UITableViewDataSource {
         return cell
     }
     
+//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+//
+//        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: HeaderView.headerIdentifier) as! HeaderView
+//
+//        return header
+//    }
+//
+//    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+//        200
+//    }
     
 }
 
@@ -80,6 +131,17 @@ extension MainViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         180
     }
+    
+//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+//
+//        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: HeaderView.headerIdentifier) as! HeaderView
+//
+//        return header
+//    }
+//
+//    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+//        200
+//    }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)

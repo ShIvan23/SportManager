@@ -112,6 +112,13 @@ final class PlayerCell: UITableViewCell {
         return label
     }()
     
+    private let playerStatusLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Status"
+        return label
+    }()
+    
     // MARK: - Initializers
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -136,7 +143,7 @@ final class PlayerCell: UITableViewCell {
     
     // MARK: - Private Methods
     private func setupLayout() {
-        [numberLabel, fullNameLabel, avatarImageView, mainStackView, leftStackView, teamLabel, nationalityLabel, positionLabel, ageLabel, rightStackView, teamDescriptionLabel, nationalityDescriptionLabel, positionDescriptionLabel, ageDescriptionLabel].forEach { (element) in
+        [numberLabel, fullNameLabel, playerStatusLabel, avatarImageView, mainStackView, leftStackView, teamLabel, nationalityLabel, positionLabel, ageLabel, rightStackView, teamDescriptionLabel, nationalityDescriptionLabel, positionDescriptionLabel, ageDescriptionLabel].forEach { (element) in
             addSubview(element)
         }
         
@@ -151,6 +158,9 @@ final class PlayerCell: UITableViewCell {
                                      
                                      fullNameLabel.centerYAnchor.constraint(equalTo: numberLabel.centerYAnchor),
                                      fullNameLabel.leadingAnchor.constraint(equalTo: numberLabel.trailingAnchor, constant: inset),
+                                     
+                                     playerStatusLabel.trailingAnchor.constraint(equalTo: mainStackView.trailingAnchor),
+                                     playerStatusLabel.centerYAnchor.constraint(equalTo: fullNameLabel.centerYAnchor),
                                      
                                      avatarImageView.topAnchor.constraint(equalTo: numberLabel.bottomAnchor, constant: inset),
                                      avatarImageView.leadingAnchor.constraint(equalTo: numberLabel.leadingAnchor),

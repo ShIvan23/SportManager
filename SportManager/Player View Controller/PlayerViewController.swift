@@ -97,7 +97,6 @@ final class PlayerViewController: UIViewController {
         label.text = "Position:"
         label.lineBreakMode = NSLineBreakMode.byCharWrapping
         label.numberOfLines = 0
-//        label.sizeToFit()
         return label
     }()
     
@@ -148,7 +147,8 @@ final class PlayerViewController: UIViewController {
         pickerView.dataSource = self
         return pickerView
     }()
-    
+   
+    // MARK: - Life Cycles Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -356,6 +356,7 @@ extension PlayerViewController: UIPickerViewDataSource {
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        
         var count = 0
         if pickerView == teamPickerView {
             count = teams.count
@@ -367,6 +368,7 @@ extension PlayerViewController: UIPickerViewDataSource {
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        
         var title = ""
         if pickerView == teamPickerView {
             title = teams[row]
