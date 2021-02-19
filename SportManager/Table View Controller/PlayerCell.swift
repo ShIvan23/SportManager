@@ -135,7 +135,7 @@ final class PlayerCell: UITableViewCell {
         numberLabel.text = "\(model.number)"
         fullNameLabel.text = model.fullName
         avatarImageView.image = UIImage(data: model.image ?? Data())
-        teamDescriptionLabel.text = model.team
+        teamDescriptionLabel.text = model.club?.name
         nationalityDescriptionLabel.text = model.nationality
         positionDescriptionLabel.text = model.position
         ageDescriptionLabel.text = "\(model.age)"

@@ -21,12 +21,23 @@ final class PlayerViewController: UIViewController {
     private let positions = ["Вратарь", "Нападающий", "Полузащитник", "Защитник"]
     private let teams = ["Спартак", "Зенит", "ЦСКА", "Краснодар", "Локомотив"]
     
+    private let playerStatusSegmentControl: UISegmentedControl = {
+        let segmentControl = UISegmentedControl()
+        segmentControl.translatesAutoresizingMaskIntoConstraints = false
+        segmentControl.insertSegment(withTitle: "In Play", at: 0, animated: true)
+        segmentControl.insertSegment(withTitle: "Bench", at: 1, animated: true)
+        segmentControl.selectedSegmentTintColor = .systemBlue
+        segmentControl.selectedSegmentIndex = 0
+        return segmentControl
+    }()
+    
     private lazy var avatarImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
         imageView.backgroundColor = .purple
         imageView.image = chosenImage
+        imageView.clipsToBounds = true
         return imageView
     }()
     
@@ -197,7 +208,7 @@ final class PlayerViewController: UIViewController {
         let player = dataManager.createObject(from: Player.self)
         player.fullName = nameTextField.text
         player.number = Int16((numberTextField.text! as NSString).integerValue)
-        player.team = selectedClub
+        player.club = club
         player.image = chosenImage.pngData()
         player.nationality = nationalityTextField.text
         player.position = selectedPosition
@@ -240,11 +251,15 @@ final class PlayerViewController: UIViewController {
     private func setupLayout() {
         view.backgroundColor = .systemBackground
         
-        [avatarImageView, uploadImageButton, nameTextField, numberTextField, nationalityTextField, ageTextField, teamLabel, positionLabel, saveButton, selectTeamButton, selectPositionButton, teamPickerView, positionPickerView].forEach { (element) in
+        [playerStatusSegmentControl,avatarImageView, uploadImageButton, nameTextField, numberTextField, nationalityTextField, ageTextField, teamLabel, positionLabel, saveButton, selectTeamButton, selectPositionButton, teamPickerView, positionPickerView].forEach { (element) in
             view.addSubview(element)
         }
         
-        NSLayoutConstraint.activate([avatarImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
+        NSLayoutConstraint.activate([playerStatusSegmentControl.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+                                     playerStatusSegmentControl.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+                                     playerStatusSegmentControl.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
+                                     
+                                     avatarImageView.topAnchor.constraint(equalTo: playerStatusSegmentControl.bottomAnchor, constant: 40),
                                      avatarImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
                                      avatarImageView.heightAnchor.constraint(equalToConstant: 200),
                                      avatarImageView.widthAnchor.constraint(equalToConstant: 200),

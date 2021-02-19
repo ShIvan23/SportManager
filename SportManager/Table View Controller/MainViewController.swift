@@ -88,13 +88,14 @@ final class MainViewController: UIViewController {
     
     @objc private func pressedSearchPlayer() {
         let searchViewController = SearchViewController()
+        searchViewController.delegate = self
         searchViewController.modalTransitionStyle = .crossDissolve
         searchViewController.modalPresentationStyle = .overCurrentContext
         present(searchViewController, animated: true, completion: nil)
     }
     
-    private func fetchData() {
-        playerArray = dataManager.fetchData(for: Player.self)
+    private func fetchData(predicate: NSCompoundPredicate? = nil) {
+        playerArray = dataManager.fetchData(for: Player.self, predicate: predicate)
     }
     
 }
@@ -161,5 +162,12 @@ extension MainViewController: UITableViewDelegate {
         default:
             break
         }
+    }
+}
+
+extension MainViewController: SearchDelegate {
+    func viewController(_ viewController: SearchViewController, predicate: NSCompoundPredicate) {
+        fetchData(predicate: predicate)
+        tableView.reloadData()
     }
 }

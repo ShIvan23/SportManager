@@ -7,13 +7,21 @@
 
 import UIKit
 
+// MARK: - Protocol
+protocol SearchDelegate: class {
+    func viewController(_ viewController: SearchViewController, predicate: NSCompoundPredicate)
+}
+
 class SearchViewController: UIViewController {
+    
+    // MARK: - Public Properties
+    weak var delegate: SearchDelegate?
     
     // MARK: - Private Properties
     private let positions = ["Вратарь", "Нападающий", "Полузащитник", "Защитник"]
     private let teams = ["Спартак", "Зенит", "ЦСКА", "Краснодар", "Локомотив"]
-    private var selectedTeam: String!
-    private var selectedPosition: String!
+    private var selectedTeam = ""
+    private var selectedPosition = ""
     
     private let mainView: UIView = {
         let view = UIView()
@@ -158,10 +166,14 @@ class SearchViewController: UIViewController {
     
     // MARK: - Private Methods
     @objc private func startSearchButtonPressed() {
-        
+        let compoundPredicate = makeCompoundPredicate(name: nameTextField.text!, age: ageTextField.text!, position: selectedPosition, team: selectedTeam)
+        delegate?.viewController(self, predicate: compoundPredicate)
+        dismiss(animated: true, completion: nil)
     }
     
     @objc private func resetButtonPressed() {
+        let emptyPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [])
+        delegate?.viewController(self, predicate: emptyPredicate)
         dismiss(animated: true, completion: nil)
     }
     
@@ -195,6 +207,48 @@ class SearchViewController: UIViewController {
         selectTeamButton.isHidden = false
         startSearchButton.isHidden = false
         resetButton.isHidden = false
+    }
+    
+    private func makeCompoundPredicate(name: String, age: String, position: String, team: String) -> NSCompoundPredicate {
+        
+        var predicates = [NSPredicate]()
+        
+        if !name.isEmpty {
+            let namePredicate = NSPredicate(format: "fullName CONTAINS[cd] '\(name)'")
+            predicates.append(namePredicate)
+        }
+        
+        if !age.isEmpty {
+            let selectedSegmentControl = ageSearchCondition(index: ageSegmentControl.selectedSegmentIndex)
+            let agePredicate = NSPredicate(format: "age \(selectedSegmentControl) '\(age)'")
+            predicates.append(agePredicate)
+        }
+        
+        if !position.isEmpty {
+            let positionPredicate = NSPredicate(format: "position CONTAINS[cd] '\(position)'")
+            predicates.append(positionPredicate)
+        }
+        
+        if !team.isEmpty {
+            let teamPredicate = NSPredicate(format: "club.name CONTAINS[cd] '\(team)'")
+            predicates.append(teamPredicate)
+        }
+        
+        return NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+    }
+    
+    private func ageSearchCondition(index: Int) -> String {
+        
+        var condition: String!
+        
+        switch index {
+        case 0: condition = ">="
+        case 1: condition = "="
+        case 2: condition = "<="
+        default: break
+        }
+        
+        return condition
     }
     
     private func setupLayout() {
