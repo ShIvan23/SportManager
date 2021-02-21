@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17709" systemVersion="20C69" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Club" representedClassName="Club" syncable="YES" codeGenerationType="class">
+        <attribute name="name" attributeType="String" defaultValueString="Any club"/>
+        <relationship name="player" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Player" inverseName="club" inverseEntity="Player"/>
+    </entity>
+    <entity name="Player" representedClassName="Player" syncable="YES" codeGenerationType="class">
+        <attribute name="age" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="fullName" optional="YES" attributeType="String"/>
+        <attribute name="image" optional="YES" attributeType="Binary"/>
+        <attribute name="inPlay" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="nationality" attributeType="String" defaultValueString="Natinality"/>
+        <attribute name="number" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="position" attributeType="String" defaultValueString="Position"/>
+        <relationship name="club" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Club" inverseName="player" inverseEntity="Club"/>
+        <fetchedProperty name="benchProperty" optional="YES">
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="Player" predicateString="inPlay == false"/>
+        </fetchedProperty>
+        <fetchedProperty name="inPlayProperty" optional="YES">
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="Player" predicateString="inPlay == true"/>
+        </fetchedProperty>
+    </entity>
+    <elements>
+        <element name="Club" positionX="-54" positionY="-9" width="128" height="59"/>
+        <element name="Player" positionX="-241.3760681152344" positionY="-141.5426940917969" width="128" height="185"/>
+    </elements>
+</model>
