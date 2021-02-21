@@ -379,5 +379,4 @@ extension SearchViewController: UIPickerViewDataSource {
         return title
     }
     
-    
 }

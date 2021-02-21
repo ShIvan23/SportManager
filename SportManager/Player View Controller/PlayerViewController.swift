@@ -214,6 +214,12 @@ final class PlayerViewController: UIViewController {
         player.position = selectedPosition
         player.age = Int16((ageTextField.text! as NSString).integerValue)
         
+        switch playerStatusSegmentControl.selectedSegmentIndex {
+        case 0: player.inPlay = true
+        case 1: player.inPlay = false
+        default: break
+        }
+        
         dataManager.save(context: context)
         
         navigationController?.popViewController(animated: true)
@@ -393,6 +399,5 @@ extension PlayerViewController: UIPickerViewDataSource {
         
         return title
     }
-    
     
 }

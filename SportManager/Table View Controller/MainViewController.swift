@@ -14,6 +14,7 @@ final class MainViewController: UIViewController {
     
     // MARK: - Private Properties
     private var playerArray = [Player]()
+    private var selectedPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [])
     
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
@@ -33,6 +34,7 @@ final class MainViewController: UIViewController {
         segmentControl.insertSegment(withTitle: "Bench", at: 2, animated: true)
         segmentControl.selectedSegmentTintColor = .systemBlue
         segmentControl.selectedSegmentIndex = 0
+        segmentControl.addTarget(self, action: #selector(playerStatusSegmentControlPressed), for: .valueChanged)
         return segmentControl
     }()
     
@@ -46,7 +48,7 @@ final class MainViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        fetchData()
+        fetchData(predicate: selectedPredicate)
         tableView.reloadData()
     }
     
@@ -80,6 +82,12 @@ final class MainViewController: UIViewController {
                                      tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)])
     }
     
+    @objc private func playerStatusSegmentControlPressed() {
+        playerArray.removeAll()
+        fetchData(predicate: selectedPredicate)
+        tableView.reloadData()
+    }
+    
     @objc private func pressedAddPlayer() {
         let viewController = PlayerViewController()
         viewController.dataManager = dataManager
@@ -95,7 +103,23 @@ final class MainViewController: UIViewController {
     }
     
     private func fetchData(predicate: NSCompoundPredicate? = nil) {
-        playerArray = dataManager.fetchData(for: Player.self, predicate: predicate)
+         let fetchedAllPlayers = dataManager.fetchData(for: Player.self, predicate: predicate)
+        
+        switch playerStatusSegmentControl.selectedSegmentIndex {
+        
+        case 0:
+            playerArray = fetchedAllPlayers
+            
+        case 1:
+            guard let playersInPlay = fetchedAllPlayers.first?.value(forKey: "inPlayProperty") as? [Player] else { return }
+            playerArray = fetchedAllPlayers.filter { playersInPlay.contains($0) }
+            
+        case 2:
+            guard let benchPlayers = fetchedAllPlayers.first?.value(forKey: "benchProperty") as? [Player] else { return }
+            playerArray = fetchedAllPlayers.filter { benchPlayers.contains($0) }
+        
+        default: break
+        }
     }
     
 }
@@ -113,18 +137,6 @@ extension MainViewController: UITableViewDataSource {
         
         return cell
     }
-    
-//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-//
-//        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: HeaderView.headerIdentifier) as! HeaderView
-//
-//        return header
-//    }
-//
-//    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-//        200
-//    }
-    
 }
 
 // MARK: - Table View Delegate
@@ -132,17 +144,6 @@ extension MainViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         180
     }
-    
-//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-//
-//        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: HeaderView.headerIdentifier) as! HeaderView
-//
-//        return header
-//    }
-//
-//    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-//        200
-//    }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
@@ -168,6 +169,7 @@ extension MainViewController: UITableViewDelegate {
 extension MainViewController: SearchDelegate {
     func viewController(_ viewController: SearchViewController, predicate: NSCompoundPredicate) {
         fetchData(predicate: predicate)
+        selectedPredicate = predicate
         tableView.reloadData()
     }
 }

@@ -115,7 +115,7 @@ final class PlayerCell: UITableViewCell {
     private let playerStatusLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Status"
+        label.textColor = #colorLiteral(red: 0.9372549057, green: 0.3490196168, blue: 0.1921568662, alpha: 1)
         return label
     }()
     
@@ -139,6 +139,7 @@ final class PlayerCell: UITableViewCell {
         nationalityDescriptionLabel.text = model.nationality
         positionDescriptionLabel.text = model.position
         ageDescriptionLabel.text = "\(model.age)"
+        playerStatusLabel.text = model.inPlay ? "In Play" : "Bench"
     }
     
     // MARK: - Private Methods
