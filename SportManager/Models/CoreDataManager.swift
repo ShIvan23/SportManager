@@ -59,11 +59,12 @@ final class CoreDataManager {
         save(context: context)
     }
     
-    func fetchData<T: NSManagedObject>(for entity: T.Type, predicate: NSCompoundPredicate? = nil) -> [T] {
+    func fetchData<T: NSManagedObject>(for entity: T.Type, sectionNameKeyPath: String? = nil, predicate: NSCompoundPredicate? = nil) -> NSFetchedResultsController<T> {
+        
         let context = getContext()
         
         let request: NSFetchRequest<T>
-        var fetchedResult = [T]()
+//        var fetchedResult = [T]()
         
         if #available(iOS 10.0, *) {
             request = entity.fetchRequest() as! NSFetchRequest<T>
@@ -77,14 +78,17 @@ final class CoreDataManager {
         request.predicate = predicate
         request.sortDescriptors = [playerSortDescriptor]
         
+        let controller = NSFetchedResultsController(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: sectionNameKeyPath, cacheName: nil)
+        
         do {
-            fetchedResult = try context.fetch(request)
+//            fetchedResult = try context.fetch(request)
+            try controller.performFetch()
             
         } catch {
             debugPrint("Could not fetch \(error.localizedDescription)")
         }
         
-        return fetchedResult
+        return controller
     }
     
 }
