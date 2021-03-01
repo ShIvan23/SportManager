@@ -9,7 +9,6 @@ import UIKit
 
 final class PlayerCell: UITableViewCell {
     
-    // MARK: - Static Properties
     static let identifierCell = "PlayerCell"
     
     // MARK: - Private Properties

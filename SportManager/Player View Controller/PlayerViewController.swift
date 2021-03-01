@@ -12,6 +12,7 @@ final class PlayerViewController: UIViewController {
     
     // MARK: - Public Properties
     var dataManager: CoreDataManager!
+    var player: Player?
     
     // MARK: - Private Properties
     private var chosenImage = #imageLiteral(resourceName: "Generic-avatar")
@@ -55,7 +56,7 @@ final class PlayerViewController: UIViewController {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.placeholder = "Name"
-        textField.textContentType = .name
+        textField.keyboardType = .namePhonePad
         textField.borderStyle = .roundedRect
         textField.delegate = self
         textField.addTarget(self, action: #selector(inputText), for: .editingChanged)
@@ -66,7 +67,7 @@ final class PlayerViewController: UIViewController {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.placeholder = "Nationality"
-        textField.textContentType = .name
+        textField.keyboardType = .default
         textField.borderStyle = .roundedRect
         textField.delegate = self
         textField.addTarget(self, action: #selector(inputText), for: .editingChanged)
@@ -77,7 +78,7 @@ final class PlayerViewController: UIViewController {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.placeholder = "Number"
-        textField.textContentType = .telephoneNumber
+        textField.keyboardType = .numberPad
         textField.borderStyle = .roundedRect
         textField.delegate = self
         textField.addTarget(self, action: #selector(inputText), for: .editingChanged)
@@ -88,7 +89,7 @@ final class PlayerViewController: UIViewController {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.placeholder = "Age"
-        textField.textContentType = .telephoneNumber
+        textField.keyboardType = .numberPad
         textField.borderStyle = .roundedRect
         textField.delegate = self
         textField.addTarget(self, action: #selector(inputText), for: .editingChanged)
@@ -158,7 +159,7 @@ final class PlayerViewController: UIViewController {
         pickerView.dataSource = self
         return pickerView
     }()
-   
+    
     // MARK: - Life Cycles Methods
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -184,19 +185,40 @@ final class PlayerViewController: UIViewController {
         }
     }
     
+    // MARK: Public Methods
+    func setupProperties() {
+        
+        guard let data = player?.image,
+              let image = UIImage(data: data) else { return }
+        chosenImage = image
+        avatarImageView.image = chosenImage
+        
+        nameTextField.text = player?.fullName
+        numberTextField.text = "\(player?.number ?? 0)"
+        nationalityTextField.text = player?.nationality
+        ageTextField.text = "\(player?.age ?? 0)"
+        
+        let club = player?.club?.name
+        selectTeamButton.setTitle(club, for: .normal)
+        selectedClub = club
+        
+        let position = player?.position
+        selectPositionButton.setTitle(position, for: .normal)
+        selectedPosition = position
+        
+        playerStatusSegmentControl.selectedSegmentIndex = player?.inPlay ?? true ? 0 : 1
+        
+        checkTextFieldsIsEmpty()
+        checkTeamAndPositionIsEmpty()
+    }
+    
     // MARK: - Private Methods
     @objc private func uploadImageButtonPressed() {
         present(imagePickerController, animated: true, completion: nil)
     }
     
     @objc private func inputText() {
-        guard let name = nameTextField.text,
-              let number = numberTextField.text,
-              let nationality = nationalityTextField.text,
-              let age = ageTextField.text else { return }
-        
-        saveButton.isEnabled = !name.isEmpty && !number.isEmpty && !nationality.isEmpty && !age.isEmpty
-        saveButton.alpha = saveButton.isEnabled ? 1 : 0.3
+        checkTextFieldsIsEmpty()
     }
     
     @objc private func saveButtonPressed() {
@@ -205,18 +227,21 @@ final class PlayerViewController: UIViewController {
         let club = dataManager.createObject(from: Club.self)
         club.name = selectedClub
         
-        let player = dataManager.createObject(from: Player.self)
-        player.fullName = nameTextField.text
-        player.number = Int16((numberTextField.text! as NSString).integerValue)
-        player.club = club
-        player.image = chosenImage.pngData()
-        player.nationality = nationalityTextField.text
-        player.position = selectedPosition
-        player.age = Int16((ageTextField.text! as NSString).integerValue)
+        if player == nil {
+            player = dataManager.createObject(from: Player.self)
+        }
+        
+        player?.fullName = nameTextField.text
+        player?.number = Int16((numberTextField.text! as NSString).integerValue)
+        player?.club = club
+        player?.image = chosenImage.pngData()
+        player?.nationality = nationalityTextField.text
+        player?.position = selectedPosition
+        player?.age = Int16((ageTextField.text! as NSString).integerValue)
         
         switch playerStatusSegmentControl.selectedSegmentIndex {
-        case 0: player.inPlay = true
-        case 1: player.inPlay = false
+        case 0: player?.inPlay = true
+        case 1: player?.inPlay = false
         default: break
         }
         
@@ -240,11 +265,30 @@ final class PlayerViewController: UIViewController {
         imagePickerController.delegate = self
     }
     
+    private func checkTextFieldsIsEmpty() {
+        guard let name = nameTextField.text,
+              let number = numberTextField.text,
+              let nationality = nationalityTextField.text,
+              let age = ageTextField.text else { return }
+        
+        saveButton.isEnabled = !name.isEmpty && !number.isEmpty && !nationality.isEmpty && !age.isEmpty
+        saveButton.alpha = saveButton.isEnabled ? 1 : 0.3
+    }
+    
+    private func checkTeamAndPositionIsEmpty() {
+        guard let team = selectedClub,
+              let position = selectedPosition else { return }
+        
+        saveButton.isEnabled = !team.isEmpty && !position.isEmpty
+        saveButton.alpha = saveButton.isEnabled ? 1 : 0.3
+    }
+    
     private func hideTeamAndPosition() {
         teamLabel.isHidden = true
         selectTeamButton.isHidden = true
         positionLabel.isHidden = true
         selectPositionButton.isHidden = true
+        saveButton.isHidden = true
     }
     
     private func showTeamAndPosition() {
@@ -252,6 +296,7 @@ final class PlayerViewController: UIViewController {
         selectTeamButton.isHidden = false
         positionLabel.isHidden = false
         selectPositionButton.isHidden = false
+        saveButton.isHidden = false
     }
     
     private func setupLayout() {

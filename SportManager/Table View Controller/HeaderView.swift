@@ -9,7 +9,6 @@ import UIKit
 
 class HeaderView: UITableViewHeaderFooterView {
     
-    // MARK: - Static Properties
     static let headerIdentifier = "HeaderView"
 
     override init(reuseIdentifier: String?) {

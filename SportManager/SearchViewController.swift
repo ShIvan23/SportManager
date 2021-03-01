@@ -12,7 +12,7 @@ protocol SearchDelegate: class {
     func viewController(_ viewController: SearchViewController, predicate: NSCompoundPredicate)
 }
 
-class SearchViewController: UIViewController {
+final class SearchViewController: UIViewController {
     
     // MARK: - Public Properties
     weak var delegate: SearchDelegate?
